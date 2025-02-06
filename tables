@@ -1,0 +1,198 @@
+1. patient_case
+	01. id
+	02. name
+	03. email
+	04. extraction text
+	05. attachments long text
+	06. case_id
+	07. age
+	08. gender
+	09. ipr
+	10. chief_complaint textbox
+	11. treatment_plan long text
+	12. stl_upper_file
+	13. stl_lower_file
+	14. stl_byte_scan_file
+	15. created_by
+	16. doctor_id
+
+2. xrays
+	1. id
+	2. file_name
+	3. type
+	4. order
+	5. status
+
+3. images
+	1. id
+	2. file_name
+	3. type
+	4. order
+	5. status
+
+4. need_more_info
+	1. id
+	2. case_id
+	3. notes
+	4. created_by
+
+5. pending_approval
+	1. id
+	2. case_id
+	3. simulation_link_url
+	4. ipr_chart
+	5. comments
+	6. status
+	7. created_by
+
+6. step_file_ready
+	1. id
+	2. case_id
+	3. error longtext
+	4. created_by
+
+7. modification_received
+	1. id
+	2. case_id
+	3. simulation_link_url
+	4. ipr_chart
+	5. comments long text
+	6. created_by
+
+
+case_submission_department
+	1. id
+	2. p_case_id
+	3. 
+
+teams
+	1. id
+	2. name
+	3. created_by
+	4. status
+team_users
+	1. id
+	2. team_id
+	3. user_id
+
+
+case_received
+	1. id
+	2. p_case_id
+	3. status
+	4. planer
+	5. team
+	6. case_status
+	7. case_info
+
+
+// 02-06-2024
+
+cases_status_users
+	1. id
+	3. p_case_id
+	4. user_id
+	5. case_status
+
+cases_status_users_comments
+	1. id
+	2. pcsu_id
+	3. comments
+	4. case_status
+	 
+
+
+
+
+
+
+approved_for_step_files
+	
+
+
+
+
+
+Discussed with umer bhai   31-05-2024  23:14:00 
+
+
+
+
+1. case submitted case_status => 1
+2. Treatment Planning case_status => 2
+3. Ready for QA case_status => 3
+4. Need More Info case_status => 4
+5. Rejected By Qa case_status => 5
+6. Approved By Qa case_status => 6
+7. Pending Ortho check  case_status => 7
+8. Pending Step files case_status => 8
+9. Need Modifications case_status => 9
+
+
+planner_id
+qa_id
+
+
+
+1. treatment_planning', 2 => 'quality_checking', 3 => 'treatment_planning_upload', 4 => 'pending_step_files', 5 => 'step_files_uploaded
+
+
+
+need_more_info  /api/need_more_info
+	case_status => 4
+	p_case_id => 3
+	comments => comments
+	type => need_more_info
+	1. 
+		change status => Hold or need more info
+		1. submit to need more into assign to dr 
+	2. passed to qa
+		1. submitted to qa 
+			status => 3
+
+	3. Reacted By Doctor
+		1. 
+	4. Reacted By QA
+		1. 
+
+rejected_by_quality_check => assign to planners
+	case_status => 5
+	p_case_id
+	comments
+
+	1. Rejected by qa
+		1. assign to planner
+
+	2. Approved by QA
+		1. status => 6
+
+
+
+approved_by_quality_check => assign to doctor
+	case_status
+	p_case_id
+	comments
+
+need_modifications:  /api/need_modifications  => assign to planners
+	case_status
+	case_id
+	comments   
+
+pending_step_files / api/pending_step_files  => post processing 
+	case_status
+	p_case_id
+	comments
+
+
+ready_step_files /api/ready_step_files
+	case_status
+	p_case_id
+	comments
+
+
+
+
+
+
+
+

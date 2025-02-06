@@ -1,0 +1,30 @@
+[17-May-2024 02:30:43 UTC] PHP Warning:  require(/home/himaqjjt/test.himalayatool.com/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/himaqjjt/test.himalayatool.com/public/index.php on line 13
+[17-May-2024 02:30:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/himaqjjt/test.himalayatool.com/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/himaqjjt/test.himalayatool.com/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/himaqjjt/test.himalayatool.com/public/index.php on line 13
+[17-May-2024 02:31:03 UTC] PHP Warning:  require(/home/himaqjjt/test.himalayatool.com/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/himaqjjt/test.himalayatool.com/public/index.php on line 13
+[17-May-2024 02:31:03 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/himaqjjt/test.himalayatool.com/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/himaqjjt/test.himalayatool.com/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/himaqjjt/test.himalayatool.com/public/index.php on line 13
+[29-Jun-2024 13:20:55 UTC] PHP Warning:  require(/home/treatzce/admin/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:20:55 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/treatzce/admin/public/../vendor/autoload.php' (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home/treatzce/admin/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:07 UTC] PHP Warning:  require(/home/treatzce/admin/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/treatzce/admin/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/treatzce/admin/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:09 UTC] PHP Warning:  require(/home/treatzce/admin/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:09 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/treatzce/admin/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/treatzce/admin/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:15 UTC] PHP Warning:  require(/home/treatzce/admin/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/treatzce/admin/public/index.php on line 13
+[29-Jun-2024 13:21:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/treatzce/admin/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/treatzce/admin/public/index.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/treatzce/admin/public/index.php on line 13
