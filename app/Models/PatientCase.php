@@ -55,7 +55,8 @@ class PatientCase extends Model
                 'stl_file_by_post_processing_we_transfer_link',
                 'patient_location',
                 'case_type',
-                'arch'
+                'arch',
+                'software_id'
         ];
 
 
@@ -89,6 +90,10 @@ class PatientCase extends Model
     }
     public function post_processing(){
         return $this->belongsTo(User::class, 'post_processing_id', 'id');
+    }
+
+    public function software(){
+        return $this->belongsTo(Software::class, 'software_id', 'id');
     }
 
 }

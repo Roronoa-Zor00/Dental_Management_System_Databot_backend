@@ -89,6 +89,11 @@ class UserTableSeeder extends Seeder
             'softwares-detail',
             'softwares-update',
             'softwares-delete',
+            'external-cases-list',
+            'external-cases-store',
+            'external-cases-detail',
+            'external-cases-update',
+            'external-cases-delete',
         ];
         if (!empty($permissions)) {
             foreach ($permissions as $key => $value) {

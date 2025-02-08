@@ -12,6 +12,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TeamsController;
 use App\Http\Controllers\API\CasePlansController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\ExternalPatientCaseController;
 use App\Http\Controllers\API\SubClientController;
 use App\Http\Controllers\API\FileUploadController;
 use App\Http\Controllers\API\NotificationController;
@@ -30,10 +31,6 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-
-Route::get('pass', function () {
-    return bcrypt('azeem123');
-});
 
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
@@ -168,6 +165,16 @@ Route::middleware('auth:api')->group(function () {
         Route::post('softwares/update/{guid}', 'update');
         Route::delete('softwares/{guid}', 'destroy');
     });
+
+    Route::controller(ExternalPatientCaseController::class)->group(function () {
+        Route::get('external_patient_cases', 'index');
+        Route::post('external_patient_cases/store', 'store');
+        Route::delete('external_patient_cases/{guid}', 'destroy');
+        Route::get('external_patient_cases/{guid}', 'detail');
+        Route::post('external_patient_cases/update/{guid}', 'update');
+    });
+
+    
 });
 
 Route::post('upload', [FileUploadController::class, 'uploadFile']);
