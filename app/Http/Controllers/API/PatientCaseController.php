@@ -29,10 +29,18 @@ class PatientCaseController extends Controller
     /**
      * @var array
      */
+
+    /**
+     * Register a PatientCase.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+
     protected $response = [];
     protected $status = 200;
     protected $user_id = 0;
     protected $role_name = '';
+
     public function __construct(ActivityLogs $activityLog = null)
     {
         if (!empty(auth()->user())) {
@@ -169,7 +177,8 @@ class PatientCaseController extends Controller
 
                 }
             )
-            ->orderBy('is_priority', 'DESC')->orderBy('id', 'DESC');
+            // ->orderBy('is_priority', 'DESC')
+            ->orderBy('id', 'DESC');
         if (!empty($pagination) && $pagination == 1) {
             $patient_cases = $cases->paginate($per_page);
         } else {
@@ -189,11 +198,163 @@ class PatientCaseController extends Controller
         return response()->json($this->response, $this->status);
     }
 
-    /**
-     * Register a PatientCase.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+    public function export_cases()
+    {
+        $search = '';
+
+        $patient_name = null;
+        $clinic_name = null;
+        $case_type = null;
+        $case_completed = null;
+        $date_from = null;
+        $date_to = null;
+
+        if (isset(request()->search) && !empty(request()->search)) {
+            $search = request()->search;
+        }
+        if (isset(request()->patient_name) && !empty(request()->patient_name)) {
+            $patient_name = request()->patient_name;
+        }
+        if (isset(request()->clinic_name) && !empty(request()->clinic_name)) {
+            $clinic_name = request()->clinic_name;
+        }
+        if (isset(request()->case_type) && !empty(request()->case_type)) {
+            $case_type = request()->case_type;
+        }
+        if (isset(request()->case_completed) && !empty(request()->case_completed)) {
+            $case_completed = request()->case_completed;
+        }
+
+        if (isset(request()->date_from) && !empty(request()->date_to)) {
+            $date_from = request()->date_from;
+            $date_to = request()->date_to;
+        }
+
+        $now = Carbon::now()->timestamp;
+        $timeLimit = Carbon::now()->addHours(8)->timestamp;
+
+
+        $patient_cases = [];
+        $cases = PatientCase::select('id', 'guid', 'name', 'email', 'case_id', 'age', 'gender', 'chief_complaint', 'status', 'is_priority', 'expected_time', 'start_date_time', 'created_at', 'case_type', 'created_by', 'planner_id', 'assign_to', 'client_id')->with([
+            'created_user' => function ($query) {
+                $query->select('id', 'guid', 'username', 'first_name', 'last_name');
+            },
+            'planner' => function ($query) {
+                $query->select('id', 'guid', 'username', 'first_name', 'last_name');
+            }
+        ])->when($this->role_name, function ($q) {
+            if ($this->role_name == 'post_processing') {
+                $q->whereIn('status', [9, 10, 13, 14, 15, 17]);
+            } else if ($this->role_name != 'super_admin' && $this->role_name != 'case_submission') {
+                if (auth()->user()->email == 'drshakeelahmed_vk@yahoo.com' && !empty(auth()->user()->client_id)) {
+                    $q->where(function ($query) {
+                        $query->where('created_by', auth()->user()->id)
+                            ->orWhere('assign_to', auth()->user()->id)
+                            ->orWhere('client_id', auth()->user()->id)
+                            ->orWhere('created_by', auth()->user()->client_id);
+                    });
+                    // $q->where('created_by', auth()->user()->id)->orWhere('assign_to', auth()->user()->id)->orWhere('client_id', auth()->user()->id)->orWhere('created_by', auth()->user()->client_id);
+                } else {
+                    $q->where(function ($query) {
+                        $query->where('created_by', auth()->user()->id)->orWhere('assign_to', auth()->user()->id)->orWhere('client_id', auth()->user()->id);
+                    });
+                    // $q->where('created_by', auth()->user()->id)->orWhere('assign_to', auth()->user()->id)->orWhere('client_id', auth()->user()->id);
+                }
+            }
+        })
+            ->when(!empty($search), function ($q) use ($search) {
+                $q->where('case_id', 'LIKE', '%' . $search . '%');
+            })
+            ->when(!empty($patient_name), function ($q) use ($patient_name) {
+                $q->where('name', 'LIKE', '%' . $patient_name . '%');
+            })
+            ->when(!empty($clinic_name), function ($q) use ($clinic_name) {
+                $q->whereHas('users', function ($query) use ($clinic_name) {
+                    $query->where('username', 'LIKE', '%' . $clinic_name . '%');
+                });
+            })
+            ->when(!empty($case_type), function ($q) use ($case_type) {
+                $q->where('case_type', $case_type);
+            })
+            ->when(!empty($case_completed), function ($q) use ($case_completed) {
+                $q->where('status', $case_completed);
+            })
+            // ->when((!empty($this->role_name) && ($this->role_name != 'sub_client' && $this->role_name != 'client' && $this->role_name != 'post_processing' && $this->role_name == 'super_admin')), function($q){
+            //     $q->where('verified_by_client', 1);
+            // })
+            ->when((isset(request()->status)), function ($q) {
+                $q->where('status', request()->status);
+            })
+
+            ->when((!empty($date_from) && !empty($date_to)), function ($q) use ($date_from, $date_to) {
+                $q->whereBetween('created_at', [date('Y-m-d', strtotime($date_from)) . " 00:00:00", date('Y-m-d', strtotime($date_to)) . " 23:59:59"]);
+            })
+            ->when((isset(request()->is_modification_cases) && request()->is_modification_cases == 1), function ($q) {
+                $q->whereIn('status', [8, 13, 14, 17]);
+            })
+            // ->when((isset(request()->is_prority_cases) && request()->is_prority_cases == 1), function($q) use($timeLimit){
+
+            //     $q->whereRaw('UNIX_TIMESTAMP(start_date_time) <= ?', [now()->addHours(8)->timestamp])->whereRaw('UNIX_TIMESTAMP(start_date_time) >= ?', [now()->timestamp]);
+
+            //     // $q->where('start_date_time', '<=', now()->addHours(20));
+
+            // })
+            ->when(
+                isset(request()->is_prority_cases) && request()->is_prority_cases == 1,
+                function ($q) use ($now, $timeLimit) {
+
+                    $q->where('start_date_time_timestamp_string', '<=', $timeLimit)->where('start_date_time_timestamp_string', '>=', $now)->whereNotIn('status', [7, 11, 12, 16, 18]);
+
+                    // $q->whereBetween('start_date_time', [
+                    //     $now->toDateTimeString(),
+                    //     $timeLimit->toDateTimeString()
+                    // ]);
+
+                }
+            )
+            ->orderBy('id', 'DESC');
+        
+            $patient_cases = $cases->get();
+
+        if (empty($patient_cases)) {
+            $this->status = 400;
+            $this->response['status'] = $this->status;
+            $this->response['success'] = true;
+            $this->response['message'] = 'Record not found';
+            return response()->json($this->response, $this->status);
+        }
+
+        $payload = [];
+
+        foreach ($patient_cases as $key => $value) {
+            $case_payload = [];
+            $case_payload['guid'] = $value->guid ?? '';
+            $case_payload['id'] = $value->id ?? '';
+            $case_payload['case_id'] = $value->case_id ?? '';
+            $case_payload['status'] = $value->status ?? '';
+            $case_payload['name'] = $value->name ?? '';
+            $case_payload['email'] = $value->email ?? '';
+            $case_payload['gender'] = $value->gender ?? '';
+            $case_payload['created_at'] = $value->created_at ?? null;
+            $case_payload['created_user'] = [
+                'username' => $value->created_user->username ?? '',
+            ];
+            
+            $case_payload['planner'] = [
+                'username' => $value->planner->username ?? '',
+                'first_name' => $value->planner->first_name ?? '',
+                'last_name' => $value->planner->last_name ?? ''
+            ];
+        
+            $payload[] = $case_payload;
+        }
+
+        $this->response['message'] = 'Patient cases list!';
+        $this->response['data'] = $payload;
+        $this->response['status'] = $this->status;
+        return response()->json($this->response, $this->status);
+    }
+
     public function store(Request $request)
     {
 
@@ -374,9 +535,9 @@ class PatientCaseController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required'
         ]);
-        
 
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             $this->status = 422;
             $this->response['status'] = $this->status;
             $this->response['success'] = false;
@@ -385,16 +546,13 @@ class PatientCaseController extends Controller
         }
 
         $patient_case_status = CasesStatusUser::where('id', $request->id)->first();
-        if (!$patient_case_status) 
-        {
+        if (!$patient_case_status) {
             $this->status = 400;
             $this->response['status'] = $this->status;
             $this->response['success'] = false;
             $this->response['message'] = 'Case Status Not Found!';
             return response()->json($this->response, $this->status);
-        }
-        else
-        {
+        } else {
             $patient_case_status->work_start_datetime = $request->work_start_datetime;
             $patient_case_status->work_end_datetime = $request->work_end_datetime;
             try {
@@ -403,14 +561,13 @@ class PatientCaseController extends Controller
                 $this->response['data'] = $patient_case_status;
                 $this->response['status'] = $this->status;
                 return response()->json($this->response, $this->status);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $this->status = 500;
                 $this->response['message'] = 'Error Updating Status Workload!';
                 $this->response['data'] = $patient_case_status;
                 $this->response['status'] = $this->status;
                 return response()->json($this->response, $this->status);
             }
-            
         }
     }
 
@@ -439,6 +596,7 @@ class PatientCaseController extends Controller
         $this->response['status'] = $this->status;
         return response()->json($this->response, $this->status);
     }
+
     public function update(Request $request, $guid)
     {
 
@@ -731,7 +889,6 @@ class PatientCaseController extends Controller
         return response()->json($this->response, $this->status);
     }
 
-    // 
     public function update_patient_case_status(Request $request)
     {
 
@@ -853,7 +1010,6 @@ class PatientCaseController extends Controller
         return response()->json($this->response, $this->status);
     }
 
-    // 
     public function getCasesByStatus($status = 1)
     {
         $patient_cases = [];

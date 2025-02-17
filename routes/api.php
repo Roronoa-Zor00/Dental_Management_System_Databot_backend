@@ -77,21 +77,18 @@ Route::middleware('auth:api')->group(function () {
 
     Route::controller(PatientCaseController::class)->group(function () {
         Route::get('patient_cases', 'index');
+        Route::get('patient_cases/export_cases', 'export_cases');
         Route::post('patient_cases/store', 'store');
         Route::get('patient_cases/{guid}', 'detail');
         Route::post('patient_cases/update/{guid}', 'update');
         Route::delete('patient_cases/{guid}', 'destroy');
         Route::post('patient_cases/case_assign_to', 'case_assign_to');
         Route::post('patient_cases/update_patient_case_status', 'update_patient_case_status');
-        // 
         Route::get('patient_cases/by_case_status/{status}', 'getCasesByStatus');
         Route::get('patient_cases/verified_by_client/{guid}', 'verified_by_client');
-
         Route::get('patient_case/completed_cases', 'completed_cases');
-
         Route::get('patient_case/cases_histories', 'casesHistories');
         Route::get('cases_histories', 'cases_histories');
-
         Route::get('check_case_id/{case_id}', 'checkCaseIdUnique');
         Route::get('timeupdate', 'updateStartDateTimeInString');
         Route::post('patient_case/update_status_workload', 'store_case_status_workload');
