@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('url_action')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->tinyInteger('is_read')->default(0);
-            $table->tinyInteger('is_admin_read')->default(0);
+            $table->tinyInteger('is_read_admin')->default(0);
+            $table->tinyInteger('is_admin_id')->default(0);
+            $table->tinyInteger('is_read_case_submission')->default(0);
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });

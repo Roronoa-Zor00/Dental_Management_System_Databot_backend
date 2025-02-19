@@ -40,13 +40,20 @@ return new class extends Migration
             $table->unsignedTinyInteger('case_version')->default(1);
             $table->string('setup_type')->nullable();
             $table->unsignedTinyInteger('scan_version')->default(0);
+            $table->string('stl_file_by_post_processing')->nullable();
             $table->string('container_file_by_post_processing')->nullable();
             $table->unsignedBigInteger('sub_client_id')->default(0);
             $table->unsignedBigInteger('client_id')->default(0);
             $table->unsignedTinyInteger('verified_by_client')->default(0);
+            $table->string('phone')->nullable();
             $table->timestamp('start_date_time')->nullable();
             $table->integer('start_date_time_timestamp_string')->nullable();
+            $table->string('stl_file_by_post_processing_we_transfer_link')->nullable();
+            $table->string('patient_location')->nullable();
+            $table->string('case_type')->nullable();
+            $table->string('arch')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
