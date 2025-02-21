@@ -1,0 +1,27 @@
+Setting Up Frontend:
+=============================================================
+Install NodeJs
+
+Commands:
+-------------------------------------------------------------
+npm install --legacy-peer-deps
+
+
+Setting Up Brontend:
+=============================================================
+Install Composer
+Install PHP 8.2
+PHP Extensions: curl, sodium, fileinfo, mbstring, openssl, pdo_mysql
+Database Name: dental_management_system
+
+Commands:
+-------------------------------------------------------------
+php artisan key:generate
+php artisan jwt:secret
+php artisan migrate
+
+
+Login:
+------------------------------------------------------------
+super_admin
+3412341234
