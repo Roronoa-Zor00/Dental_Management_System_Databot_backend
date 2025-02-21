@@ -3610,8 +3610,13 @@ class DashboardController extends Controller
             //     ->whereIn('status', [8, 13, 14, 17])
             //     // ->groupBy('status')
             //     ->get()->count();
+                if($totalCount){
+                    $averageCount = (($status8Count / $totalCount) * 100);
+                } else {
+                    $averageCount = 0;
+                }
                 
-                $averageCount = (($status8Count / $totalCount) * 100);
+                
 
           //  dd($totalCount, $status8Count, $status8Counts, $averageCount);
         //}
