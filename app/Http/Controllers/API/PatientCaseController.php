@@ -650,6 +650,10 @@ class PatientCaseController extends Controller
             $patient_cases->ipr = $request->ipr;
         }
 
+        if (isset($request->software_id)) {
+            $patient_cases->software_id = $request->software_id;
+        }
+
         if (isset($request->patient_location)) {
             $patient_cases->patient_location = $request->patient_location;
         }
