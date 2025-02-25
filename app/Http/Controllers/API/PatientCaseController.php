@@ -370,7 +370,7 @@ class PatientCaseController extends Controller
             'treatment_plan' => 'required',
             'stl_upper_file' => 'required',
             'stl_lower_file' => 'required',
-            'software_id' => 'required|numeric',
+            // 'software_id' => 'required|numeric',
             'is_priority' => 'nullable|numeric',
         ]);
 
