@@ -16,6 +16,8 @@ class ExternalPatientCase extends Model
 
     protected $fillable = [
         'guid',
+        'case_id',
+        'name',
         'created_by',
         'status',
         'client_id',

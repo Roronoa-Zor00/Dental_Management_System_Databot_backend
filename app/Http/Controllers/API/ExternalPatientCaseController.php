@@ -43,7 +43,7 @@ class ExternalPatientCaseController extends Controller
 
         $patient_cases = [];
         $cases = ExternalPatientCase::select(
-            'id', 'guid', 'status', 'software_id', 'client_id', 'case_datetime', 'created_at', 'created_by'
+            'id', 'case_id', 'name', 'guid', 'status', 'software_id', 'client_id', 'case_datetime', 'created_at', 'created_by'
         )
         ->with([
             'created_user' => function ($query) {
@@ -82,6 +82,8 @@ class ExternalPatientCaseController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'case_id' => 'required|unique:patient_cases',
             'status' => 'required',
             'software_id' => 'required',
             'client_id' => 'required',
@@ -97,6 +99,8 @@ class ExternalPatientCaseController extends Controller
         }
 
         $case = new ExternalPatientCase();
+        $case->name = $request->name;
+        $case->case_id = $request->case_id;
         $case->status = $request->status;
         $case->software_id = $request->software_id;
         $case->client_id = $request->client_id;
@@ -152,6 +156,8 @@ class ExternalPatientCaseController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'case_id' => 'required|unique:patient_cases',
             'status' => 'required',
             'software_id' => 'required',
             'client_id' => 'required',
@@ -175,6 +181,8 @@ class ExternalPatientCaseController extends Controller
             return response()->json($this->response, $this->status);
         }
 
+        $case->name = $request->name;
+        $case->case_id = $request->case_id;
         $case->status = $request->status;
         $case->software_id = $request->software_id;
         $case->client_id = $request->client_id;
